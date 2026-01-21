@@ -1,0 +1,5 @@
+This file for a pilot that a new file is supposed to managed by git hub for the first time.
+
+Okay.. 
+Now let's add some more line for test.
+I love github, do not go away.
