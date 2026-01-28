@@ -18,7 +18,7 @@ def model_00(train_loader, val_loader, input_size, hidden_size=64, lr=0.001, epo
             return x
 
     # Initialize model, loss, optimizer
-    model = BasicMLP(input_size=input_size, hidden_size=hidden_size)
+    model = BasicMLP(input_size=input_size, hidden_size=hidden_size).to(torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
