@@ -1,4 +1,5 @@
 # evaluation.py
+from matplotlib.pylab import f
 import numpy as np
 from sklearn.metrics import (
     accuracy_score,
@@ -56,11 +57,11 @@ def evaluate_model(
     accuracy = accuracy_score(y_true, y_pred)
 
     metrics = {
-        "accuracy": {accuracy: .2%f},
-        "precision": {precision: .2%f},
-        "recall": {recall: .2%f},
-        "f1": {f1: .2%f},
-        "macro_f1": {macro_f1: .2%f}
+        "accuracy": f"{accuracy:.2%}",
+        "precision": f"{precision:.2%}",
+        "recall": f"{recall:.2%}",
+        "f1": f"{f1:.2%}",
+        "macro_f1": f"{macro_f1:.2%}"
     }
 
     # ---------- pretty print ----------
