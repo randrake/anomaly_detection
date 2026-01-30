@@ -160,6 +160,7 @@ def model_01(train_loader, val_loader, input_size,
                 nn.ReLU(inplace=True),
                 nn.Dropout(0.3),
                 nn.Linear(hid, hid // 2),
+                nn.BatchNorm1d(hid // 2), ####
                 nn.ReLU(inplace=True),
                 nn.Linear(hid // 2, ncls)
             )

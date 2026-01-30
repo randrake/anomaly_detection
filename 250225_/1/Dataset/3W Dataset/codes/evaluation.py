@@ -23,7 +23,11 @@ def _print_metrics_table(metrics, title="Evaluation Metrics"):
     order = ["accuracy", "precision", "recall", "f1", "macro_f1"]
     for k in order:
         v = metrics[k]
-        print(f" {k:<11} │ {v:.4f}")
+        if isinstance(v, (int, float)):
+            print(f" {k:<11} │ {v:.4f}")
+        else:
+            print(f" {k:<11} │ {v}")
+
 
 
 def evaluate_model(
@@ -60,8 +64,8 @@ def evaluate_model(
         "accuracy": f"{accuracy:.2%}",
         "precision": f"{precision:.2%}",
         "recall": f"{recall:.2%}",
-        "f1": f"{f1:.2%}",
-        "macro_f1": f"{macro_f1:.2%}"
+        "f1": f"{f1:.2}",
+        "macro_f1": f"{macro_f1:.2}"
     }
 
     # ---------- pretty print ----------
