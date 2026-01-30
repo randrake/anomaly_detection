@@ -15,9 +15,9 @@ from sklearn.metrics import f1_score
 def model_00(train_loader,
              val_loader,
              input_size,
-             hidden_size=64,
+             hidden_size=128,
              lr=0.001,
-             epochs=10,
+             epochs=30,
              device=None):
     """
     Simple 2‑layer MLP for 9‑class classification.

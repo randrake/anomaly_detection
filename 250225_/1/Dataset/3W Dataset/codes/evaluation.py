@@ -55,7 +55,7 @@ def evaluate_model(
     else:
         precision = precision_score(y_true, y_pred, average=average, zero_division=0)
         recall    = recall_score(y_true, y_pred, average=average, zero_division=0)
-        f1        = f1_score(y_true, y_pred, average=average, zero_division=0)
+        f1        = f1_score(y_true, y_pred, average="weighted", zero_division=0)
         macro_f1  = f1_score(y_true, y_pred, average="macro", zero_division=0)
 
     accuracy = accuracy_score(y_true, y_pred)
