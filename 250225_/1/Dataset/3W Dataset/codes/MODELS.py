@@ -8,6 +8,7 @@ import torch.optim as optim
 import torch, numpy as np
 from sklearn.utils.class_weight import compute_class_weight
 from sklearn.metrics import f1_score
+import copy
 ###########################################################################################################################################################################
 
 
@@ -18,7 +19,8 @@ def model_00(train_loader,
              hidden_size=128,
              lr=0.001,
              epochs=30,
-             device=None):
+             device=None,
+             patience=8):
     """
     Simple 2‑layer MLP for 9‑class classification.
     Returns
@@ -54,6 +56,11 @@ def model_00(train_loader,
     # hist = {"train_loss": [], "val_loss": [], "train_acc": [], "val_acc": []}
     hist = {"train_loss": [], "val_loss": [], "train_acc": [], "val_acc": [], "val_macro_f1": []}
 
+    # -------- early stopping parameters --------
+    best_f1 = -1.0
+    patience = 8
+    patience_counter = 0
+    best_state = None
 
     # -------- training loop ------------
     for epoch in range(1, epochs + 1):
@@ -121,11 +128,26 @@ def model_00(train_loader,
             zero_division=0
         )
 
-
         val_loss = loss_sum / total
         val_acc  = 100 * correct / total
         hist["val_loss"].append(val_loss)
         hist["val_acc"].append(val_acc)
+        hist["val_macro_f1"].append(val_macro_f1)
+
+        # -------- early stopping check --------
+        if val_macro_f1 > best_f1:
+            best_f1 = val_macro_f1
+            #best_state = model.state_dict()
+            best_state = copy.deepcopy(model.state_dict())
+            patience_counter = 0
+        else:
+            patience_counter += 1
+
+        if patience_counter >= patience:
+            print(f"Early stopping triggered at epoch {epoch}")
+            model.load_state_dict(best_state)
+            break
+
 
         # print(f"[Epoch {epoch:02d}/{epochs}] "
         #       f"Train: loss {train_loss:.4f} | acc {train_acc:.2f}%   "
@@ -140,9 +162,16 @@ def model_00(train_loader,
 
 
 ################################################################################################################
-def model_01(train_loader, val_loader, input_size,
-             hidden_size=128, lr=1e-3, epochs=30,
-             num_classes=9, seed=42, device=None):
+def model_01(train_loader, 
+             val_loader, 
+             input_size,
+             hidden_size=128, 
+             lr=1e-3, 
+             epochs=30,
+             num_classes=9, 
+             seed=42, 
+             patience=5,
+             device=None):
     """
     Deeper MLP with class‑weighted CE
     Returns: model, history  (history has loss and accuracy arrays)
@@ -178,6 +207,11 @@ def model_01(train_loader, val_loader, input_size,
     # ---------- history trackers ----------
     # hist = {"train_loss": [], "val_loss": [], "train_acc": [], "val_acc": []}
     hist = {"train_loss": [], "val_loss": [], "train_acc": [], "val_acc": [], "val_macro_f1": []}
+
+    # -------- early stopping parameters --------
+    best_f1 = -1.0
+    patience_counter = 0
+    best_state = None
 
 
     for epoch in range(1, epochs+1):
@@ -242,12 +276,26 @@ def model_01(train_loader, val_loader, input_size,
             zero_division=0
         )
 
-
-
         val_loss = loss_sum / total
         val_acc  = 100 * correct / total
         hist["val_loss"].append(val_loss)
         hist["val_acc"].append(val_acc)
+        hist["val_macro_f1"].append(val_macro_f1)
+
+        # -------- early stopping check --------
+        if val_macro_f1 > best_f1:
+            best_f1 = val_macro_f1
+            #best_state = model.state_dict()
+            best_state = copy.deepcopy(model.state_dict())
+            patience_counter = 0
+        else:
+            patience_counter += 1
+
+        if patience_counter >= patience:
+            print(f"Early stopping triggered at epoch {epoch}")
+            model.load_state_dict(best_state)
+            break
+
 
         # print(f"[Epoch {epoch:02d}/{epochs}] "
         #       f"Train: loss {train_loss:.4f} | acc {train_acc:.2f}%   "
