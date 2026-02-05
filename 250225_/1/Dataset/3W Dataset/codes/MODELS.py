@@ -20,7 +20,7 @@ def model_00(train_loader,
              lr=0.001,
              epochs=30,
              device=None,
-             patience=8):
+             patience=5):
     """
     Simple 2‑layer MLP for 9‑class classification.
     Returns
@@ -170,7 +170,7 @@ def model_01(train_loader,
              epochs=30,
              num_classes=9, 
              seed=42, 
-             patience=5,
+             patience=10,
              device=None):
     """
     Deeper MLP with class‑weighted CE
